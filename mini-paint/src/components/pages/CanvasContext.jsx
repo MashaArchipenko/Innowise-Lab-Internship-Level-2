@@ -1,0 +1,93 @@
+import React, { useContext, useRef, useState } from "react";
+import { storage } from "../../firebase/config";
+const CanvasContext = React.createContext();
+
+export const CanvasProvider = ({ children }) => {
+  const [isDrawing, setIsDrawing] = useState(false);
+  const canvasRef = useRef(null);
+  const contextRef = useRef(null);
+
+  const updateCanvas = (color, brush) => {
+    contextRef.current.strokeStyle = color.hex;
+    contextRef.current.lineWidth = brush;
+  };
+
+  const prepareCanvas = () => {
+    const canvas = canvasRef.current;
+    canvas.width = window.innerWidth * 2;
+    canvas.height = window.innerHeight;
+
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${window.innerHeight / 2}px`;
+    const context = canvas.getContext("2d");
+    context.scale(2, 2);
+    context.lineCap = "round";
+    context.strokeStyle = "black";
+    context.lineWidth = 10;
+    contextRef.current = context;
+  };
+
+  const startDrawing = ({ nativeEvent }, color) => {
+    //console.log(contextRef.current)
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(offsetX, offsetY);
+    setIsDrawing(true);
+  };
+
+  const drawRect = ({ nativeEvent }) => {};
+
+  const saveCanvas = () => {
+    const canvas = canvasRef.current;
+    var image = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    const uploadTask = storage.ref();
+    const imageRef = uploadTask.child("userId/images/first.jpg");
+
+    imageRef.putString(image, "data_url").then((snapshot) => {
+      console.log("Uploaded a data_url string!");
+    });
+  };
+
+  const finishDrawing = () => {
+    contextRef.current.closePath();
+    setIsDrawing(false);
+  };
+
+  const draw = ({ nativeEvent }) => {
+    if (!isDrawing) {
+      return;
+    }
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.lineTo(offsetX, offsetY);
+    contextRef.current.stroke();
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  };
+
+  return (
+    <CanvasContext.Provider
+      value={{
+        canvasRef,
+        contextRef,
+        prepareCanvas,
+        startDrawing,
+        finishDrawing,
+        clearCanvas,
+        draw,
+        updateCanvas,
+        saveCanvas,
+      }}
+    >
+      {children}
+    </CanvasContext.Provider>
+  );
+};
+
+export const useCanvas = () => useContext(CanvasContext);

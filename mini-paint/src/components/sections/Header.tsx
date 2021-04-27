@@ -29,7 +29,11 @@ const Header: FC = () => {
                 <Button text="Sign in" onClick={() => history.push('/signin')} />
               </div>
               :
+              <div className="buttons">
+              <Button text="Create picture" onClick={()=>history.push('/create')} className="is-primary"/>
+              <Button text="diagram" onClick={()=>history.push('/diagram')} className="is-primary"/>
               <Button text="Sign out" onClick={logoutClickHandler} />
+              </div>
             }
           </div>
         </div>

@@ -3,10 +3,13 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import authReducer from './reducers/authReducer';
+import canvasReducer from './reducers/canvasReducer';
 
 const rootReducer = combineReducers({
-  auth: authReducer
+  auth: authReducer,
+  canvas:canvasReducer
 });
+
 
 const store = createStore(
   rootReducer,

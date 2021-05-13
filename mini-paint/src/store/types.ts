@@ -5,6 +5,7 @@ export const SET_ERROR = 'SET_ERROR';
 export const NEED_VERIFICATION = 'NEED_VERIFICATION';
 export const SET_SUCCESS = 'SET_SUCCESS';
 
+
 export interface User {
   firstName: string;
   email: string;
@@ -60,6 +61,7 @@ interface SetSuccessAction {
   type: typeof SET_SUCCESS;
   payload: string;
 }
+
 
 export type AuthAction = SetUserAction | SetLoadingAction | SignOutAction | SetErrorAction | NeedVerificationAction | SetSuccessAction;
 

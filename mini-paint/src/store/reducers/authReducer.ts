@@ -9,6 +9,7 @@ const initialState: AuthState = {
   success: ''
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, action: AuthAction) => {
   switch (action.type) {
     case SET_USER:

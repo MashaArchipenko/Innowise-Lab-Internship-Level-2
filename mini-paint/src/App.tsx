@@ -17,6 +17,7 @@ import { getUserById, setLoading, setNeedVerification } from './store/actions/au
 import { RootState } from './store';
 import Create from './components/pages/Create';
 import Canvas from './components/pages/Canvas';
+import { getImageByUserId } from './store/actions/canvasActions';
 
 const App: FC = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,9 @@ const App: FC = () => {
         if(!user.emailVerified) {
           dispatch(setNeedVerification());
         }
+        dispatch(getImageByUserId(user.uid)) && console.log(true)
       }
+      
       dispatch(setLoading(false));
     });
 

@@ -6,7 +6,6 @@ export const CanvasProvider = ({ children }) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
-
   const updateCanvas = (color, brush) => {
     contextRef.current.strokeStyle = color.hex;
     contextRef.current.lineWidth = brush;
@@ -39,15 +38,16 @@ export const CanvasProvider = ({ children }) => {
 
   const saveCanvas = () => {
     const canvas = canvasRef.current;
+    console.log(canvas);
     var image = canvas
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");
     const uploadTask = storage.ref();
     const imageRef = uploadTask.child("userId/images/first.jpg");
 
-    imageRef.putString(image, "data_url").then((snapshot) => {
+    /*imageRef.putString(image, "data_url").then((snapshot) => {
       console.log("Uploaded a data_url string!");
-    });
+    });*/
   };
 
   const finishDrawing = () => {

@@ -1,8 +1,10 @@
 import { useEffect,useState } from "react";
 import { useCanvas } from "./CanvasContext";
+import {useDispatch,useSelector} from 'react-redux'
 import SketchPicker, { useColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
-
+import { getImageByUserId, saveImage } from "../../store/actions/canvasActions";
+import { RootState } from '../../store';
 export default function Canvas() {
   const {
     canvasRef,
@@ -12,11 +14,26 @@ export default function Canvas() {
     draw,
     clearCanvas,
     updateCanvas,
-    saveCanvas,
   } = useCanvas();
 
+  const { user} = useSelector((state: RootState) => state.auth);
+  
   const [color, setColor] = useColor("hex", "#121212");
   const [brush, setThick] = useState(10);
+
+const dispatch = useDispatch()
+
+  const saveCanvas=()=>
+  {
+    const canvas = canvasRef.current;
+  
+    var image = canvas
+      .toDataURL("image/jpg")
+      console.log(image)
+      dispatch(saveImage({id:1,imageUrl:image,name:'name.jpg'},user?.id || ""))
+
+      dispatch(getImageByUserId(user?.id || ""))
+  }
 
   useEffect(() => {
     prepareCanvas();
